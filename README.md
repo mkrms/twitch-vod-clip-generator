@@ -1,5 +1,11 @@
 ## Twitch VOD Clip Generator
 
+## 動作サンプル
+
+https://github.com/user-attachments/assets/c524a780-bba1-4202-8533-15f47cc89099
+
+
+
 ### 概要
 Twitchのアーカイブ動画からコメント数を解析するPythonスクリプトです。
 
