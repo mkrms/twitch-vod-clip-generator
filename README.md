@@ -83,3 +83,6 @@ hh:mm:ss : コメント数
 0:00:00 : 33
 ```
 
+# Lisence
+
+This project is licensed under the MIT License, see the LICENSE.txt file for details
