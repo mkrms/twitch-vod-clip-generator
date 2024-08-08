@@ -1,4 +1,4 @@
-#! MIT License
+# MIT License
 
 # Copyright (c) 2024 Niiyama Keisuke
 
@@ -28,6 +28,7 @@ import pprint
 import numpy as np
 import matplotlib.pyplot as plt
 import re
+import webbrowser
 
 
 start = 0
@@ -50,6 +51,14 @@ def time_to_hhmmss(t):
     minutes = int((t - hours * 3600) // 60)
     seconds = int(t - hours * 3600 - minutes * 60)
     return "{0}:{1:02}:{2:02}".format(hours, minutes, seconds)
+
+# 秒 → hh"h"mm"m"ss"s" 変換
+
+def time_to_link(t):
+    hours = int(t // 3600)
+    minutes = int((t - hours * 3600) // 60)
+    seconds = int(t - hours * 3600 - minutes * 60)
+    return "{0}h{1:02}m{2:02}s".format(hours, minutes, seconds)
 
 # hh:mm:ss → 秒 変換
 def time_to_seconds(t):
@@ -143,8 +152,25 @@ def num_of_ext_time():
     except ValueError:
         print("正しい時間数を入力してください")
         return num_of_ext_time()
+    
+def open_clip(sec, video_url):
+    y=0
+    link_len = len(sec)
+    print("\n抽出した時間のURLを生成します。途中でやめる場合は'stop'と入力してください")
+    for i in sec:
+        query = time_to_link(i)
+        print("開始時間：", query)
+        link = video_url + '?t=' + query
+        webbrowser.open(link,2,True)
+        is_next = input("エンターキーで次のクリップを開きます\n")
+        y +=1
+        if y > link_len:
+            break
+        if is_next == 'stop':
+            break
 
-def analyze_comments(comment_data, sec, UNIT_OF_SEC):
+
+def analyze_comments(comment_data, sec, UNIT_OF_SEC, video_url):
     is_select_time_range = input("抽出する時間帯を選択しますか？(yes / no): ")
 
     if is_select_time_range == "yes":
@@ -173,6 +199,8 @@ def analyze_comments(comment_data, sec, UNIT_OF_SEC):
         for t in many_comments_time:
             print(time_to_hhmmss(t), ":", many_comments_amount[y])
             y+=1
+        
+        open_clip(many_comments_time, video_url)
 
         select_again(comment_data, sec, UNIT_OF_SEC)
 
@@ -191,6 +219,8 @@ def analyze_comments(comment_data, sec, UNIT_OF_SEC):
         for t in many_comments_time:
             print(time_to_hhmmss(t), ":", many_comments_amount[y])
             y+=1
+        
+        open_clip(many_comments_time, video_url)
             
         select_again(comment_data, sec, UNIT_OF_SEC)
     else:
@@ -267,7 +297,7 @@ def main():
     plt.xlabel("minute")
     plt.pause(0.1)
 
-    analyze_comments(comment_data, sec, UNIT_OF_SEC)
+    analyze_comments(comment_data, sec, UNIT_OF_SEC, video_url)
 
     input("エンターキーを押すと終了します。")
 
