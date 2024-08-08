@@ -133,16 +133,16 @@ def analyze_comment_amount(unit_sec, start_time, end_time):
 
     return comment_data, sec, minute
 
-def select_again(comment_data, sec, UNIT_OF_SEC):
+def select_again(comment_data, sec, UNIT_OF_SEC, video_url):
     is_again = input("もう一度集計しますか？(yes / no): ")
     if is_again == "yes":
         print("#########################")
-        return analyze_comments(comment_data, sec, UNIT_OF_SEC)
+        return analyze_comments(comment_data, sec, UNIT_OF_SEC, video_url)
     elif is_again == "no":
         pass
     else:
         print("yes または no を入力してください\n")
-        return select_again(comment_data, sec, UNIT_OF_SEC)
+        return select_again(comment_data, sec, UNIT_OF_SEC, video_url)
 
 def num_of_ext_time():
     ext_time = input("抽出する時間数を入力してください（半角数字）: ")
@@ -159,7 +159,8 @@ def open_clip(sec, video_url):
     print("\n抽出した時間のURLを生成します。途中でやめる場合は'stop'と入力してください")
     for i in sec:
         query = time_to_link(i)
-        print("開始時間：", query)
+        time = time_to_hhmmss(i)
+        print("開始時間：", time)
         link = video_url + '?t=' + query
         webbrowser.open(link,2,True)
         is_next = input("エンターキーで次のクリップを開きます\n")
@@ -202,7 +203,7 @@ def analyze_comments(comment_data, sec, UNIT_OF_SEC, video_url):
         
         open_clip(many_comments_time, video_url)
 
-        select_again(comment_data, sec, UNIT_OF_SEC)
+        select_again(comment_data, sec, UNIT_OF_SEC, video_url)
 
     elif is_select_time_range == "no":
         comment_array = np.stack((sec,comment_data))
@@ -222,10 +223,10 @@ def analyze_comments(comment_data, sec, UNIT_OF_SEC, video_url):
         
         open_clip(many_comments_time, video_url)
             
-        select_again(comment_data, sec, UNIT_OF_SEC)
+        select_again(comment_data, sec, UNIT_OF_SEC, video_url)
     else:
         print("yes または no を入力してください\n")
-        return analyze_comments(comment_data, sec, UNIT_OF_SEC)
+        return analyze_comments(comment_data, sec, UNIT_OF_SEC, video_url)
         
 
 ####################################################################
