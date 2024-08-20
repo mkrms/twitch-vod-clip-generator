@@ -269,7 +269,7 @@ def select_method():
 
 
 def dl_clip():
-    output_path = str(Path.home()) + "/downloads/"
+    output_path = str(Path.home()) + "\\Downloads\\"
     start_time = input_start_time()
     end_time = input_end_time()
     file_name = input("出力ファイル名を入力してください：")
@@ -299,13 +299,14 @@ def dl_clip():
         print("動画のダウンロード中にエラーが発生しました")
     else:
         try:
-            subprocess.run(["ffmpeg", "-i", output_path + file_name +
+            subprocess.run(["./ffmpeg", "-i", output_path + file_name +
                             ".ts", "-c:v", "copy", output_path + file_name + ".mp4"])
         except:
             print("mp4の変換中にエラーが発生しました")
         else:
             print("動画のダウンロードが正常に終了しました")
-            subprocess.run(["rm", "-rf", output_path + file_name + ".ts"])
+            # subprocess.run(["rm", "-rf", output_path + file_name + ".ts"])
+            subprocess.run(["del", output_path + file_name + ".ts"], shell=True)
             select_method()
 
 
@@ -336,6 +337,8 @@ def main():
     print("接続に成功しました\n")
     response.raise_for_status()
     data = response.json()
+
+    count_messages(data[0]['data']['video'], start)
 
     cursor = None
     if data[0]['data']['video']['comments']['pageInfo']['hasNextPage']:
